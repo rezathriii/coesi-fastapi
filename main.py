@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi import FastAPI, HTTPException, APIRouter, Response
 from pydantic import BaseModel
 from typing import Optional, Literal
 import json
@@ -32,6 +32,19 @@ def write_json_file(data: dict):
             json.dump(data, file, indent=2)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to write data: {str(e)}")
+
+
+@api_router.get("/health", status_code=200)
+async def health_check():
+    """Health check endpoint for Docker and monitoring"""
+    try:
+        read_json_file()
+        return {"status": "healthy", "message": "Service is operational"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail={"status": "unhealthy", "error": str(e)}
+        )
 
 
 @api_router.get("/models/")
@@ -84,4 +97,4 @@ app.include_router(api_router)
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8088)
