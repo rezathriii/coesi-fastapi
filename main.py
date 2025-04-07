@@ -19,7 +19,7 @@ class ModelInput(BaseModel):
     name: str
     description: str
     tags: List[str]
-    solvers: Optional[str] = None
+    solver: Optional[str] = None
     model_execution_cmd: Optional[str] = None
     simulator_names: Optional[List[str]] = []
     simulation_parameters: Optional[List[Dict[str, Any]]] = []

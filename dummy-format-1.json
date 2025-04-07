@@ -10,7 +10,7 @@
         "feedback",
         "regulation"
       ],
-      "solvers": "Control_Solver",
+      "solver": "Control_Solver",
       "model_execution_cmd": "run_pid_controller",
       "simulator_names": [
         "ControlSim",
@@ -148,7 +148,7 @@
         "actuator",
         "electrical"
       ],
-      "solvers": "ODE_Solver",
+      "solver": "ODE_Solver",
       "model_execution_cmd": "run_dc_motor",
       "simulator_names": [
         "ElectroMechSim",
@@ -286,7 +286,7 @@
         "battery",
         "energy"
       ],
-      "solvers": "DAE_Solver",
+      "solver": "DAE_Solver",
       "model_execution_cmd": "run_battery_pack",
       "simulator_names": [
         "PowerSim",
@@ -410,7 +410,7 @@
         "filter",
         "processing"
       ],
-      "solvers": "ODE_Solver",
+      "solver": "ODE_Solver",
       "model_execution_cmd": "run_low_pass_filter",
       "simulator_names": [
         "SignalSim",
@@ -500,7 +500,7 @@
         "temperature",
         "environmental"
       ],
-      "solvers": "ODE_Solver",
+      "solver": "ODE_Solver",
       "model_execution_cmd": "run_temperature_sensor",
       "simulator_names": [
         "ThermalSim",
@@ -593,7 +593,7 @@
         "power-system",
         "motor-control"
       ],
-      "solvers": null,
+      "solver": null,
       "model_execution_cmd": null,
       "simulator_names": [],
       "simulation_parameters": [],
@@ -669,7 +669,7 @@
         "sensor",
         "signal-processing"
       ],
-      "solvers": null,
+      "solver": null,
       "model_execution_cmd": null,
       "simulator_names": [],
       "simulation_parameters": [],
@@ -919,7 +919,7 @@
         "thermal",
         "feedback"
       ],
-      "solvers": null,
+      "solver": null,
       "model_execution_cmd": null,
       "simulator_names": [],
       "simulation_parameters": [],
