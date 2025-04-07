@@ -1,0 +1,10 @@
+services:
+  fastapi-app:
+    build: .
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./dummy-format-1.json:/app/dummy-format-1.json
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
