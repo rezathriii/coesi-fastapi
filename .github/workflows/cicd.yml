@@ -40,4 +40,10 @@ jobs:
 
       - name: Pull changes and restart container
         run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd ${{ secrets.APP_DIRECTORY }} &&
+            git pull origin main &&
+            sudo docker compose -f ${{ secrets.DOCKER_COMPOSE_PROD_FILE }} build &&
+            sudo docker compose -f ${{ secrets.DOCKER_COMPOSE_PROD_FILE }} up -d
+          "
           
