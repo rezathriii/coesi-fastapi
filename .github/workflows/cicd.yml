@@ -26,9 +26,3 @@ jobs:
             sudo docker compose -f ${{ secrets.DOCKER_COMPOSE_PROD_FILE }} build &&
             sudo docker compose -f ${{ secrets.DOCKER_COMPOSE_PROD_FILE }} up -d
           "
-
-      - name: Verify deployment
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            sudo docker ps
-          "
