@@ -1,9 +1,19 @@
 from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Literal, List, Optional, Dict, Any
+from typing import Literal, List, Optional, Dict, Any, Union
 import json
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, change this to your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 api_router = APIRouter(prefix="/api/v1")
 
@@ -26,13 +36,11 @@ class ModelInput(BaseModel):
     input_variables: Optional[List[Dict[str, Any]]] = []
     output_variables: Optional[List[Dict[str, Any]]] = []
     model_parameters: Optional[List[Dict[str, Any]]] = []
-    ports: Optional[List[Dict[str, Any]]] = []
-    components: Optional[List[str]] = []
+    components: Optional[Union[List[str], Dict[str, List[str]]]] = []
     connections: Optional[List[Dict[str, Any]]] = []
 
 
 def read_json_file() -> dict:
-    """Read and return the content of the JSON file"""
     try:
         with open(JSON_FILE_PATH, 'r') as file:
             return json.load(file)
@@ -43,7 +51,6 @@ def read_json_file() -> dict:
 
 
 def write_json_file(data: dict):
-    """Write data to the JSON file"""
     try:
         with open(JSON_FILE_PATH, 'w') as file:
             json.dump(data, file, indent=2)
@@ -54,7 +61,6 @@ def write_json_file(data: dict):
 @api_router.get("/health", status_code=200)
 @api_router.get("/health/", status_code=200)
 async def health_check():
-    """Health check endpoint for Docker and monitoring"""
     try:
         read_json_file()
         return {"status": "healthy", "message": "Service is operational"}
@@ -70,10 +76,6 @@ async def health_check():
 async def get_models(
         filter: Optional[Literal["models", "composite-models"]] = None
 ):
-    """
-    Get all models or composite-models from the JSON file.
-    If filter is provided ('models' or 'composite-models'), only return that specific section.
-    """
     data = read_json_file()
 
     if filter:
@@ -87,9 +89,6 @@ async def get_models(
 @api_router.delete("/models")
 @api_router.delete("/models/")
 async def delete_model(request: DeleteModelRequest):
-    """
-    Delete a model or composite-model by ID from the JSON file.
-    """
     model_id = request.model_id
     data = read_json_file()
 
@@ -99,7 +98,6 @@ async def delete_model(request: DeleteModelRequest):
     composite_models = data.get("composite-models", [])
     updated_composite_models = [cm for cm in composite_models if cm["id"] != model_id]
 
-    # Check if the model was found and removed
     if (len(models) == len(updated_models) and
             len(composite_models) == len(updated_composite_models)):
         raise HTTPException(status_code=404, detail="Model not found")
@@ -115,16 +113,13 @@ async def delete_model(request: DeleteModelRequest):
 @api_router.post("/models", status_code=201)
 @api_router.post("/models/", status_code=201)
 async def add_model(model_data: ModelInput):
-    """
-    Add a new model or composite-model to the JSON file.
-    Automatically classifies based on presence of components/connections.
-    """
     data = read_json_file()
-
     model_dict = model_data.model_dump(exclude_unset=True)
 
-    is_composite = (len(model_dict.get('components', [])) > 0 or
-                    len(model_dict.get('connections', [])) > 0)
+    is_composite = (
+            isinstance(model_dict.get('components'), dict) and len(model_dict.get('components')) > 0 or
+            isinstance(model_dict.get('connections'), list) and len(model_dict.get('connections')) > 0
+    )
 
     if is_composite:
         if 'composite-models' not in data:

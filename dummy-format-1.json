@@ -1,6 +1,84 @@
 {
   "models": [
     {
+      "id": "550e8400-e29b-41d4-a716-446655440000-temperature-sensor",
+      "name": "temperature-sensor",
+      "description": "A model for measuring temperature in Celsius",
+      "tags": [
+        "model",
+        "sensor",
+        "temperature",
+        "environmental"
+      ],
+      "solver": "ODE_Solver",
+      "model_execution_cmd": "run_temperature_sensor",
+      "simulator_names": [
+        "ThermalSim",
+        "EnvSim"
+      ],
+      "simulation_parameters": [
+        {
+          "name": "sampling_rate",
+          "unit": "Hz",
+          "value": "10",
+          "description": "How often temperature is measured",
+          "tags": []
+        }
+      ],
+      "input_variables": [
+        {
+          "name": "ambient_temp",
+          "description": "Current ambient temperature",
+          "unit": "\u00b0C",
+          "start_value": "20",
+          "data_type": "float",
+          "range": {
+            "min": "-40",
+            "max": "85"
+          },
+          "tags": [
+            "environment",
+            "input"
+          ]
+        }
+      ],
+      "output_variables": [
+        {
+          "name": "measured_temp",
+          "description": "Processed temperature measurement",
+          "unit": "\u00b0C",
+          "start_value": "20",
+          "data_type": "float",
+          "range": {
+            "min": "-40",
+            "max": "85"
+          },
+          "tags": [
+            "output",
+            "measurement"
+          ]
+        }
+      ],
+      "model_parameters": [
+        {
+          "name": "sensor_accuracy",
+          "description": "Accuracy of the temperature sensor",
+          "unit": "\u00b0C",
+          "default_value": "0.5",
+          "data_type": "float",
+          "range": {
+            "min": "0.1",
+            "max": "2.0"
+          },
+          "tags": [
+            "calibration"
+          ]
+        }
+      ],
+      "components": [],
+      "connections": []
+    },
+    {
       "id": "550e8400-e29b-41d4-a716-446655440001-pid-controller",
       "name": "pid-controller",
       "description": "Proportional-Integral-Derivative controller",
@@ -113,26 +191,6 @@
           "tags": [
             "tuning"
           ]
-        }
-      ],
-      "ports": [
-        {
-          "id": "setpoint-input",
-          "port_type": "input",
-          "unit": "",
-          "data_type": "float"
-        },
-        {
-          "id": "feedback-input",
-          "port_type": "input",
-          "unit": "",
-          "data_type": "float"
-        },
-        {
-          "id": "control-output",
-          "port_type": "output",
-          "unit": "",
-          "data_type": "float"
         }
       ],
       "components": [],
@@ -253,26 +311,6 @@
           ]
         }
       ],
-      "ports": [
-        {
-          "id": "voltage-input",
-          "port_type": "input",
-          "unit": "V",
-          "data_type": "float"
-        },
-        {
-          "id": "speed-output",
-          "port_type": "output",
-          "unit": "rad/s",
-          "data_type": "float"
-        },
-        {
-          "id": "current-output",
-          "port_type": "output",
-          "unit": "A",
-          "data_type": "float"
-        }
-      ],
       "components": [],
       "connections": []
     },
@@ -377,26 +415,6 @@
           ]
         }
       ],
-      "ports": [
-        {
-          "id": "current-input",
-          "port_type": "input",
-          "unit": "A",
-          "data_type": "float"
-        },
-        {
-          "id": "voltage-output",
-          "port_type": "output",
-          "unit": "V",
-          "data_type": "float"
-        },
-        {
-          "id": "soc-output",
-          "port_type": "output",
-          "unit": "%",
-          "data_type": "float"
-        }
-      ],
       "components": [],
       "connections": []
     },
@@ -473,110 +491,80 @@
           ]
         }
       ],
-      "ports": [
-        {
-          "id": "signal-input",
-          "port_type": "input",
-          "unit": "",
-          "data_type": "float"
-        },
-        {
-          "id": "signal-output",
-          "port_type": "output",
-          "unit": "",
-          "data_type": "float"
-        }
-      ],
       "components": [],
       "connections": []
     },
     {
-      "id": "550e8400-e29b-41d4-a716-446655440000-temperature-sensor",
-      "name": "temperature-sensor",
-      "description": "A model for measuring temperature in Celsius",
+      "id": "test-low-pass-filter",
+      "name": "test-low-pass-filter",
+      "description": "First-order low-pass filter",
       "tags": [
         "model",
-        "sensor",
-        "temperature",
-        "environmental"
+        "signal",
+        "filter",
+        "processing"
       ],
       "solver": "ODE_Solver",
-      "model_execution_cmd": "run_temperature_sensor",
+      "model_execution_cmd": "run_low_pass_filter",
       "simulator_names": [
-        "ThermalSim",
-        "EnvSim"
+        "SignalSim",
+        "ControlSim"
       ],
       "simulation_parameters": [
         {
-          "name": "sampling_rate",
+          "name": "sample_rate",
           "unit": "Hz",
-          "value": "10",
-          "description": "How often temperature is measured",
+          "value": "1000",
+          "description": "Input signal sampling rate",
           "tags": []
         }
       ],
       "input_variables": [
         {
-          "name": "ambient_temp",
-          "description": "Current ambient temperature",
-          "unit": "\u00b0C",
-          "start_value": "20",
+          "name": "input_signal",
+          "description": "Input signal to be filtered",
+          "unit": "",
+          "start_value": "0",
           "data_type": "float",
           "range": {
-            "min": "-40",
-            "max": "85"
+            "min": "-10",
+            "max": "10"
           },
           "tags": [
-            "environment",
-            "input"
+            "signal"
           ]
         }
       ],
       "output_variables": [
         {
-          "name": "measured_temp",
-          "description": "Processed temperature measurement",
-          "unit": "\u00b0C",
-          "start_value": "20",
+          "name": "filtered_signal",
+          "description": "Filtered output signal",
+          "unit": "",
+          "start_value": "0",
           "data_type": "float",
           "range": {
-            "min": "-40",
-            "max": "85"
+            "min": "-10",
+            "max": "10"
           },
           "tags": [
-            "output",
-            "measurement"
+            "output"
           ]
         }
       ],
       "model_parameters": [
         {
-          "name": "sensor_accuracy",
-          "description": "Accuracy of the temperature sensor",
-          "unit": "\u00b0C",
-          "default_value": "0.5",
+          "name": "cutoff_frequency",
+          "description": "Filter cutoff frequency",
+          "unit": "Hz",
+          "default_value": "10",
           "data_type": "float",
           "range": {
             "min": "0.1",
-            "max": "2.0"
+            "max": "1000"
           },
           "tags": [
-            "calibration"
+            "configuration"
           ]
-        }
-      ],
-      "ports": [
-        {
-          "id": "temp-input",
-          "port_type": "input",
-          "unit": "\u00b0C",
-          "data_type": "float"
-        },
-        {
-          "id": "temp-output",
-          "port_type": "output",
-          "unit": "\u00b0C",
-          "data_type": "float"
         }
       ],
       "components": [],
@@ -584,6 +572,80 @@
     }
   ],
   "composite-models": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440100-temperature-controlled-motor",
+      "name": "temperature-controlled-motor",
+      "description": "A system that regulates motor speed based on temperature feedback",
+      "tags": [
+        "composite-model",
+        "control-system",
+        "thermal",
+        "feedback"
+      ],
+      "solver": null,
+      "model_execution_cmd": null,
+      "simulator_names": [],
+      "simulation_parameters": [],
+      "input_variables": [
+        {
+          "name": "target_temperature",
+          "description": "Desired temperature setpoint",
+          "unit": "\u00b0C",
+          "start_value": "25",
+          "data_type": "float",
+          "range": {
+            "min": "-40",
+            "max": "85"
+          },
+          "tags": [
+            "setpoint"
+          ]
+        }
+      ],
+      "output_variables": [
+        {
+          "name": "motor_speed",
+          "description": "Actual motor speed output",
+          "unit": "rad/s",
+          "start_value": "0",
+          "data_type": "float",
+          "range": {
+            "min": "-100",
+            "max": "100"
+          },
+          "tags": [
+            "output"
+          ]
+        }
+      ],
+      "model_parameters": [],
+      "components": {
+        "first_layer": [
+          "550e8400-e29b-41d4-a716-446655440000-temperature-sensor"
+        ],
+        "last_layer": [
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor"
+        ],
+        "other_layers": [
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller",
+          "550e8400-e29b-41d4-a716-446655440004-low-pass-filter"
+        ]
+      },
+      "connections": [
+        {
+          "from": "temperature-sensor.measured_temp",
+          "to": "pid-controller.process_variable"
+        },
+        {
+          "from": "pid-controller.control_signal",
+          "to": "low-pass-filter.input_signal"
+        },
+        {
+          "from": "low-pass-filter.filtered_signal",
+          "to": "dc-motor.voltage_input"
+        }
+      ]
+    },
     {
       "id": "550e8400-e29b-41d4-a716-446655440101-battery-motor-system",
       "name": "battery-motor-system",
@@ -630,33 +692,25 @@
         }
       ],
       "model_parameters": [],
-      "ports": [
-        {
-          "id": "speed-setpoint-input",
-          "port_type": "input",
-          "unit": "rad/s",
-          "data_type": "float"
-        },
-        {
-          "id": "battery-voltage-output",
-          "port_type": "output",
-          "unit": "V",
-          "data_type": "float"
-        }
-      ],
-      "components": [
-        "550e8400-e29b-41d4-a716-446655440003-battery-pack",
-        "550e8400-e29b-41d4-a716-446655440002-dc-motor",
-        "550e8400-e29b-41d4-a716-446655440001-pid-controller"
-      ],
+      "components": {
+        "first_layer": [
+          "550e8400-e29b-41d4-a716-446655440003-battery-pack"
+        ],
+        "last_layer": [
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor"
+        ],
+        "other_layers": [
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller"
+        ]
+      },
       "connections": [
         {
-          "from": "550e8400-e29b-41d4-a716-446655440003-battery-pack.voltage-output",
-          "to": "550e8400-e29b-41d4-a716-446655440002-dc-motor.voltage-input"
+          "from": "battery-pack.terminal_voltage",
+          "to": "dc-motor.voltage_input"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440002-dc-motor.speed-output",
-          "to": "550e8400-e29b-41d4-a716-446655440001-pid-controller.feedback-input"
+          "from": "dc-motor.angular_velocity",
+          "to": "pid-controller.process_variable"
         }
       ]
     },
@@ -691,26 +745,19 @@
         }
       ],
       "model_parameters": [],
-      "ports": [
-        {
-          "id": "filtered-temp-output",
-          "port_type": "output",
-          "unit": "\u00b0C",
-          "data_type": "float"
-        }
-      ],
-      "components": [
-        "550e8400-e29b-41d4-a716-446655440000-temperature-sensor",
-        "550e8400-e29b-41d4-a716-446655440004-low-pass-filter"
-      ],
+      "components": {
+        "first_layer": [
+          "550e8400-e29b-41d4-a716-446655440000-temperature-sensor"
+        ],
+        "last_layer": [
+          "550e8400-e29b-41d4-a716-446655440004-low-pass-filter"
+        ],
+        "other_layers": []
+      },
       "connections": [
         {
-          "from": "550e8400-e29b-41d4-a716-446655440000-temperature-sensor.temp-output",
-          "to": "550e8400-e29b-41d4-a716-446655440004-low-pass-filter.signal-input"
-        },
-        {
-          "from": "550e8400-e29b-41d4-a716-446655440004-low-pass-filter.signal-output",
-          "to": "filtered-temp-output"
+          "from": "temperature-sensor.measured_temp",
+          "to": "low-pass-filter.input_signal"
         }
       ]
     },
@@ -756,43 +803,31 @@
           ]
         }
       ],
-      "ports": [
-        {
-          "id": "target-temp-input",
-          "port_type": "input",
-          "unit": "\u00b0C",
-          "data_type": "float"
-        },
-        {
-          "id": "motor-speed-output",
-          "port_type": "output",
-          "unit": "rad/s",
-          "data_type": "float"
-        }
-      ],
-      "components": [
-        "550e8400-e29b-41d4-a716-446655440000-temperature-sensor",
-        "550e8400-e29b-41d4-a716-446655440000-temperature-sensor-sensor2",
-        "550e8400-e29b-41d4-a716-446655440004-low-pass-filter",
-        "550e8400-e29b-41d4-a716-446655440001-pid-controller",
-        "550e8400-e29b-41d4-a716-446655440002-dc-motor"
-      ],
+      "components": {
+        "first_layer": [
+          "550e8400-e29b-41d4-a716-446655440000-temperature-sensor",
+          "550e8400-e29b-41d4-a716-446655440000-temperature-sensor-sensor2"
+        ],
+        "last_layer": [
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor"
+        ],
+        "other_layers": [
+          "550e8400-e29b-41d4-a716-446655440004-low-pass-filter",
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller"
+        ]
+      },
       "connections": [
         {
-          "from": "550e8400-e29b-41d4-a716-446655440000-temperature-sensor.temp-output",
-          "to": "550e8400-e29b-41d4-a716-446655440004-low-pass-filter.signal-input"
+          "from": "temperature-sensor.measured_temp",
+          "to": "low-pass-filter.input_signal"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440000-temperature-sensor-sensor2.temp-output",
-          "to": "550e8400-e29b-41d4-a716-446655440004-low-pass-filter.signal-input"
+          "from": "temperature-sensor-sensor2.measured_temp",
+          "to": "low-pass-filter.input_signal"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440001-pid-controller.control-output",
-          "to": "550e8400-e29b-41d4-a716-446655440002-dc-motor.voltage-input"
-        },
-        {
-          "from": "550e8400-e29b-41d4-a716-446655440001-pid-controller.control-output",
-          "to": "motor-speed-output"
+          "from": "pid-controller.control_signal",
+          "to": "dc-motor.voltage_input"
         }
       ]
     },
@@ -851,143 +886,122 @@
           ]
         }
       ],
-      "ports": [
-        {
-          "id": "motor1-setpoint-input",
-          "port_type": "input",
-          "unit": "rad/s",
-          "data_type": "float"
-        },
-        {
-          "id": "motor2-setpoint-input",
-          "port_type": "input",
-          "unit": "rad/s",
-          "data_type": "float"
-        },
-        {
-          "id": "battery-status-output",
-          "port_type": "output",
-          "unit": "%",
-          "data_type": "float"
-        }
-      ],
-      "components": [
-        "550e8400-e29b-41d4-a716-446655440003-battery-pack",
-        "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1",
-        "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor2",
-        "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid1",
-        "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid2"
-      ],
+      "components": {
+        "first_layer": [
+          "550e8400-e29b-41d4-a716-446655440003-battery-pack"
+        ],
+        "last_layer": [
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1",
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor2"
+        ],
+        "other_layers": [
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid1",
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid2"
+        ]
+      },
       "connections": [
         {
-          "from": "550e8400-e29b-41d4-a716-446655440003-battery-pack.voltage-output",
-          "to": "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1.voltage-input"
+          "from": "battery-pack.terminal_voltage",
+          "to": "dc-motor-motor1.voltage_input"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440003-battery-pack.voltage-output",
-          "to": "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor2.voltage-input"
+          "from": "battery-pack.terminal_voltage",
+          "to": "dc-motor-motor2.voltage_input"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1.current-output",
-          "to": "550e8400-e29b-41d4-a716-446655440003-battery-pack.current-input"
+          "from": "dc-motor-motor1.current_draw",
+          "to": "battery-pack.load_current"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor2.current-output",
-          "to": "550e8400-e29b-41d4-a716-446655440003-battery-pack.current-input"
-        },
-        {
-          "from": "motor1-setpoint-input",
-          "to": "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid1.setpoint-input"
-        },
-        {
-          "from": "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1.speed-output",
-          "to": "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid1.feedback-input"
-        },
-        {
-          "from": "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid1.control-output",
-          "to": "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1.voltage-input"
+          "from": "dc-motor-motor2.current_draw",
+          "to": "battery-pack.load_current"
         }
       ]
     },
     {
-      "id": "550e8400-e29b-41d4-a716-446655440100-temperature-controlled-motor",
-      "name": "temperature-controlled-motor",
-      "description": "A system that regulates motor speed based on temperature feedback",
+      "id": "test-test-test-power-distribution",
+      "name": "power-distribution test",
+      "description": "Distributes battery power to multiple motors with individual PID control",
       "tags": [
         "composite-model",
-        "control-system",
-        "thermal",
-        "feedback"
+        "power-management",
+        "multi-motor"
       ],
-      "solver": null,
-      "model_execution_cmd": null,
-      "simulator_names": [],
-      "simulation_parameters": [],
       "input_variables": [
         {
-          "name": "target_temperature",
-          "description": "Desired temperature setpoint",
-          "unit": "\u00b0C",
-          "start_value": "25",
-          "data_type": "float",
-          "range": {
-            "min": "-40",
-            "max": "85"
-          },
-          "tags": [
-            "setpoint"
-          ]
-        }
-      ],
-      "output_variables": [
-        {
-          "name": "motor_speed",
-          "description": "Actual motor speed output",
+          "name": "motor1_setpoint",
+          "description": "Desired speed for Motor 1",
           "unit": "rad/s",
-          "start_value": "0",
+          "start_value": "30",
           "data_type": "float",
           "range": {
             "min": "-100",
             "max": "100"
           },
           "tags": [
-            "output"
+            "control"
+          ]
+        },
+        {
+          "name": "motor2_setpoint",
+          "description": "Desired speed for Motor 2",
+          "unit": "rad/s",
+          "start_value": "30",
+          "data_type": "float",
+          "range": {
+            "min": "-100",
+            "max": "100"
+          },
+          "tags": [
+            "control"
           ]
         }
       ],
-      "model_parameters": [],
-      "ports": [
+      "output_variables": [
         {
-          "id": "target-temp-input",
-          "port_type": "input",
-          "unit": "\u00b0C",
-          "data_type": "float"
-        },
-        {
-          "id": "motor-speed-output",
-          "port_type": "output",
-          "unit": "rad/s",
-          "data_type": "float"
+          "name": "battery_status",
+          "description": "Remaining battery capacity",
+          "unit": "%",
+          "start_value": "100",
+          "data_type": "float",
+          "range": {
+            "min": "0",
+            "max": "100"
+          },
+          "tags": [
+            "status"
+          ]
         }
       ],
-      "components": [
-        "550e8400-e29b-41d4-a716-446655440000-temperature-sensor",
-        "550e8400-e29b-41d4-a716-446655440001-pid-controller",
-        "550e8400-e29b-41d4-a716-446655440002-dc-motor",
-        "550e8400-e29b-41d4-a716-446655440004-low-pass-filter"
-      ],
+      "components": {
+        "first_layer": [
+          "550e8400-e29b-41d4-a716-446655440003-battery-pack"
+        ],
+        "last_layer": [
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor1",
+          "550e8400-e29b-41d4-a716-446655440002-dc-motor-motor2"
+        ],
+        "other_layers": [
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid1",
+          "550e8400-e29b-41d4-a716-446655440001-pid-controller-pid2"
+        ]
+      },
       "connections": [
         {
-          "from": "550e8400-e29b-41d4-a716-446655440000-temperature-sensor.temp-output",
-          "to": "550e8400-e29b-41d4-a716-446655440001-pid-controller.feedback-input"
+          "from": "battery-pack.terminal_voltage",
+          "to": "dc-motor-motor1.voltage_input"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440001-pid-controller.control-output",
-          "to": "550e8400-e29b-41d4-a716-446655440004-low-pass-filter.signal-input"
+          "from": "battery-pack.terminal_voltage",
+          "to": "dc-motor-motor2.voltage_input"
         },
         {
-          "from": "550e8400-e29b-41d4-a716-446655440004-low-pass-filter.signal-output",
-          "to": "550e8400-e29b-41d4-a716-446655440002-dc-motor.voltage-input"
+          "from": "dc-motor-motor1.current_draw",
+          "to": "battery-pack.load_current"
+        },
+        {
+          "from": "dc-motor-motor2.current_draw",
+          "to": "battery-pack.load_current"
         }
       ]
     }
